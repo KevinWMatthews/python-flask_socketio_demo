@@ -1,4 +1,4 @@
-const socketIOUrl = 'http://localhost:5000';
+const socketIOUrl = 'http://localhost:8000';
 const socketIO = io(socketIOUrl);
 
 let logElement = document.getElementById('socketio_log');

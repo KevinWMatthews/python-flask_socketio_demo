@@ -4,12 +4,13 @@ from flask_socketio import SocketIO
 SERVER_HOSTNAME = ''
 SERVER_PORT = 5000
 
-app = Flask(__name__)
+# gunicorn *requires* the name 'application', at least by default.
+application = Flask(__name__)
 # flask will give preference to eventlet simply by virtue of it being installed on the system.
 # It need not be imported or even specified using async_mode!
-socketio = SocketIO(app, async_mode='eventlet')
+socketio = SocketIO(application, async_mode='eventlet')
 
-@app.route('/')
+@application.route('/')
 def index():
     return render_template('index.html')
 
@@ -38,10 +39,15 @@ def client_callback(data):
     return 'Server Response 1', 'Server Response 2'
 
 if __name__ == '__main__':
-    import eventlet
-    listener = eventlet.listen((SERVER_HOSTNAME, SERVER_PORT))
-    # Run the app, not socketio.
-    # Rather than wrapping the Flask app,
-    # SocketIO() seems to inject itself into the Flask app.
-    # Specificially, it loads itself into flask's app.extensions dictionary.
-    eventlet.wsgi.server(listener, app)
+    print('Do not run this script directly!')
+    print('')
+    print('Instead, debug using:')
+    print('$ export FLASK_APP={}'.format(__file__))
+    print('$ export FLASK_ENV=development')
+    print('$ flask run --port=8000')
+    print('')
+    print('and deploy using:')
+    print('$ gunicorn --worker-class eventlet --workers 1 app')
+    print('')
+    print('Then browse to:')
+    print('localhost:8000')
